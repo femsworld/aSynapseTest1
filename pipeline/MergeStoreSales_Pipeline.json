@@ -1,5 +1,5 @@
 {
-	"name": "Pipeline 1",
+	"name": "MergeStoreSales_Pipeline",
 	"properties": {
 		"activities": [
 			{
