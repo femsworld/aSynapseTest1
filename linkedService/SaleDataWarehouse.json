@@ -1,6 +1,5 @@
 {
 	"name": "SaleDataWarehouse",
-	"type": "Microsoft.Synapse/workspaces/linkedservices",
 	"properties": {
 		"annotations": [],
 		"type": "AzureSqlDW",
@@ -8,14 +7,13 @@
 			"server": "olufemiworkspace.sql.azuresynapse.net",
 			"database": "saledatawarehouse",
 			"encrypt": "mandatory",
-			"trustServerCertificate": false,
-			"authenticationType": "SQL",
-			"userName": "sqladminuser",
-			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIlNZTkFQU0VANkRCM0MyOTktQjQ5QS00NEY1LTkyMDQtMEI5RjczMDRDNkNDXzQ0N2IzN2YxLWYwNWMtNDFhMi04NmM4LTkzMmQ5NmU1YWM2NSINCn0="
+			"trustServerCertificate": true,
+			"authenticationType": "SystemAssignedManagedIdentity"
 		},
 		"connectVia": {
 			"referenceName": "AutoResolveIntegrationRuntime",
 			"type": "IntegrationRuntimeReference"
 		}
-	}
+	},
+	"type": "Microsoft.Synapse/workspaces/linkedservices"
 }
