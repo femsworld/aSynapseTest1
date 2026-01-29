@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "olufemiworkspace"
+		},
+		"AzureBlobStorageDiabetes_connectionString": {
+			"value": ""
+		},
+		"DailySales_connectionString": {
+			"value": ""
+		},
+		"olufemiworkspace-WorkspaceDefaultSqlServer_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:olufemiworkspace.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"GitHubHTTP_properties_typeProperties_url": {
+			"value": "https://media.githubusercontent.com/media/microsoft/MLOps/refs/heads/master/examples/AzureML-Primers/data/diabetes.csv"
+		},
+		"OlufemiAdminKV_properties_typeProperties_baseUrl": {
+			"value": "https://OlufemiAdminKeyVault.vault.azure.net/"
+		},
+		"TrippingOData1_properties_typeProperties_url": {
+			"value": "https://services.odata.org/TripPinRESTierService/"
+		},
+		"olufemiworkspace-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://olufemisynapsestorage.dfs.core.windows.net"
+		}
+	}
+}
