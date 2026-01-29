@@ -11,6 +11,18 @@
 		"DailySales_connectionString": {
 			"value": ""
 		},
+		"MergeStaging_connectionString": {
+			"value": ""
+		},
+		"SaleDataWarehouse_password": {
+			"value": ""
+		},
+		"SalesConnection_connectionString": {
+			"value": ""
+		},
+		"StoresConnection_connectionString": {
+			"value": ""
+		},
 		"olufemiworkspace-WorkspaceDefaultSqlServer_connectionString": {
 			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:olufemiworkspace.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
 		},
@@ -19,6 +31,15 @@
 		},
 		"OlufemiAdminKV_properties_typeProperties_baseUrl": {
 			"value": "https://OlufemiAdminKeyVault.vault.azure.net/"
+		},
+		"SaleDataWarehouse_properties_typeProperties_server": {
+			"value": "olufemiworkspace.sql.azuresynapse.net"
+		},
+		"SaleDataWarehouse_properties_typeProperties_database": {
+			"value": "saledatawarehouse"
+		},
+		"SaleDataWarehouse_properties_typeProperties_userName": {
+			"value": "sqladminuser"
 		},
 		"TrippingOData1_properties_typeProperties_url": {
 			"value": "https://services.odata.org/TripPinRESTierService/"

@@ -15,6 +15,22 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'DailySales'"
 		},
+		"MergeStaging_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'MergeStaging'"
+		},
+		"SaleDataWarehouse_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SaleDataWarehouse'"
+		},
+		"SalesConnection_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SalesConnection'"
+		},
+		"StoresConnection_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'StoresConnection'"
+		},
 		"olufemiworkspace-WorkspaceDefaultSqlServer_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'olufemiworkspace-WorkspaceDefaultSqlServer'",
@@ -27,6 +43,18 @@
 		"OlufemiAdminKV_properties_typeProperties_baseUrl": {
 			"type": "string",
 			"defaultValue": "https://OlufemiAdminKeyVault.vault.azure.net/"
+		},
+		"SaleDataWarehouse_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "olufemiworkspace.sql.azuresynapse.net"
+		},
+		"SaleDataWarehouse_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "saledatawarehouse"
+		},
+		"SaleDataWarehouse_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "sqladminuser"
 		},
 		"TrippingOData1_properties_typeProperties_url": {
 			"type": "string",
@@ -41,15 +69,6 @@
 		"workspaceId": "[concat('Microsoft.Synapse/workspaces/', parameters('workspaceName'))]"
 	},
 	"resources": [
-		{
-			"name": "[concat(parameters('workspaceName'), '/saledatawarehouse')]",
-			"type": "Microsoft.Synapse/workspaces/sqlPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"annotations": []
-			},
-			"dependsOn": []
-		},
 		{
 			"name": "[concat(parameters('workspaceName'), '/DailySalesPipeline')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
@@ -429,6 +448,60 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/Pipeline 1')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "MergeStoresAndSales",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Dataflow1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Sales": {},
+									"Stores": {},
+									"SynapseAnalytics": {}
+								}
+							},
+							"staging": {
+								"linkedService": {
+									"referenceName": "MergeStaging",
+									"type": "LinkedServiceReference"
+								},
+								"folderPath": "randomuse"
+							},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/dataflows/Dataflow1')]",
+				"[concat(variables('workspaceId'), '/linkedServices/MergeStaging')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/DestinationDataset_i53')]",
 			"type": "Microsoft.Synapse/workspaces/datasets",
 			"apiVersion": "2019-06-01-preview",
@@ -496,6 +569,100 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/linkedServices/AzureBlobStorageDiabetes')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Json1')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "StoresConnection",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "stores.json",
+						"container": "stores"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"city": {
+							"type": "string"
+						},
+						"code": {
+							"type": "string"
+						},
+						"size": {
+							"type": "string"
+						},
+						"latitude": {
+							"type": "number"
+						},
+						"longitude": {
+							"type": "number"
+						},
+						"population": {
+							"type": "string"
+						},
+						"state": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/StoresConnection')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Sales')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SalesConnection",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "dailysales",
+						"container": "sales"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "StoreCode",
+						"type": "String"
+					},
+					{
+						"name": "Date",
+						"type": "String"
+					},
+					{
+						"name": "TotalSales",
+						"type": "String"
+					},
+					{
+						"name": "TotalAmount",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/SalesConnection')]"
 			]
 		},
 		{
@@ -612,6 +779,27 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/StoreSales')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SaleDataWarehouse",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "",
+					"table": "StoreSales"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/SaleDataWarehouse')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/TrippingDataset')]",
 			"type": "Microsoft.Synapse/workspaces/datasets",
 			"apiVersion": "2019-06-01-preview",
@@ -679,6 +867,25 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/MergeStaging')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('MergeStaging_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/OlufemiAdminKV')]",
 			"type": "Microsoft.Synapse/workspaces/linkedServices",
 			"apiVersion": "2019-06-01-preview",
@@ -690,6 +897,72 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SaleDataWarehouse')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"server": "[parameters('SaleDataWarehouse_properties_typeProperties_server')]",
+					"database": "[parameters('SaleDataWarehouse_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('SaleDataWarehouse_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('SaleDataWarehouse_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SalesConnection')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('SalesConnection_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/StoresConnection')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('StoresConnection_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('workspaceName'), '/TrippingOData1')]",
@@ -907,6 +1180,92 @@
 				"typeProperties": {}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Dataflow1')]",
+			"type": "Microsoft.Synapse/workspaces/dataflows",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Sales",
+								"type": "DatasetReference"
+							},
+							"name": "Sales"
+						},
+						{
+							"dataset": {
+								"referenceName": "Json1",
+								"type": "DatasetReference"
+							},
+							"name": "Stores"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "StoreSales",
+								"type": "DatasetReference"
+							},
+							"name": "SynapseAnalytics"
+						}
+					],
+					"transformations": [
+						{
+							"name": "StoreSales"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          StoreCode as string,",
+						"          Date as date,",
+						"          TotalSales as long,",
+						"          TotalAmount as long",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> Sales",
+						"source(output(",
+						"          city as string,",
+						"          code as string,",
+						"          size as string,",
+						"          latitude as double,",
+						"          longitude as double,",
+						"          population as string,",
+						"          state as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     documentForm: 'documentPerLine') ~> Stores",
+						"Sales, Stores join(StoreCode == code,",
+						"     joinType:'inner',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> StoreSales",
+						"StoreSales sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     staged: true,",
+						"     allowCopyCommand: true,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> SynapseAnalytics"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/Sales')]",
+				"[concat(variables('workspaceId'), '/datasets/Json1')]",
+				"[concat(variables('workspaceId'), '/datasets/StoreSales')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('workspaceName'), '/WorkspaceSystemIdentity')]",
