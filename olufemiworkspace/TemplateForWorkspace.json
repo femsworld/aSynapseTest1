@@ -54,7 +54,7 @@
 		},
 		"SaleDataWarehouse_properties_typeProperties_userName": {
 			"type": "string",
-			"defaultValue": "sqlserveradmin"
+			"defaultValue": "sqladminuser"
 		},
 		"TrippingOData1_properties_typeProperties_url": {
 			"type": "string",
@@ -498,7 +498,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/dataflows/MergeStoresSales')]",
-				"[concat(variables('workspaceId'), '/linkedServices/MergeStaging')]"
+				"[concat(variables('workspaceId'), '/linkedServices/MergeStaging')]",
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
 			]
 		},
 		{
@@ -909,7 +910,7 @@
 					"server": "[parameters('SaleDataWarehouse_properties_typeProperties_server')]",
 					"database": "[parameters('SaleDataWarehouse_properties_typeProperties_database')]",
 					"encrypt": "mandatory",
-					"trustServerCertificate": false,
+					"trustServerCertificate": true,
 					"authenticationType": "SQL",
 					"userName": "[parameters('SaleDataWarehouse_properties_typeProperties_userName')]",
 					"password": {
