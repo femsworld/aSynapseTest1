@@ -14,9 +14,6 @@
 		"MergeStaging_connectionString": {
 			"value": ""
 		},
-		"SaleDataWarehouse_password": {
-			"value": ""
-		},
 		"SalesConnection_connectionString": {
 			"value": ""
 		},
@@ -37,9 +34,6 @@
 		},
 		"SaleDataWarehouse_properties_typeProperties_database": {
 			"value": "saledatawarehouse"
-		},
-		"SaleDataWarehouse_properties_typeProperties_userName": {
-			"value": "sqladminuser"
 		},
 		"TrippingOData1_properties_typeProperties_url": {
 			"value": "https://services.odata.org/TripPinRESTierService/"

@@ -19,10 +19,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'MergeStaging'"
 		},
-		"SaleDataWarehouse_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'SaleDataWarehouse'"
-		},
 		"SalesConnection_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SalesConnection'"
@@ -51,10 +47,6 @@
 		"SaleDataWarehouse_properties_typeProperties_database": {
 			"type": "string",
 			"defaultValue": "saledatawarehouse"
-		},
-		"SaleDataWarehouse_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "sqladminuser"
 		},
 		"TrippingOData1_properties_typeProperties_url": {
 			"type": "string",
@@ -910,12 +902,7 @@
 					"database": "[parameters('SaleDataWarehouse_properties_typeProperties_database')]",
 					"encrypt": "mandatory",
 					"trustServerCertificate": true,
-					"authenticationType": "SQL",
-					"userName": "[parameters('SaleDataWarehouse_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('SaleDataWarehouse_password')]"
-					}
+					"authenticationType": "SystemAssignedManagedIdentity"
 				},
 				"connectVia": {
 					"referenceName": "AutoResolveIntegrationRuntime",
