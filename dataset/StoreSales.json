@@ -1,0 +1,16 @@
+{
+	"name": "StoreSales",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SaleDataWarehouse",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "",
+			"table": "StoreSales"
+		}
+	}
+}

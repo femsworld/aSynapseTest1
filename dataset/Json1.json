@@ -1,0 +1,44 @@
+{
+	"name": "Json1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "StoresConnection",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "stores.json",
+				"container": "stores"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"city": {
+					"type": "string"
+				},
+				"code": {
+					"type": "string"
+				},
+				"size": {
+					"type": "string"
+				},
+				"latitude": {
+					"type": "number"
+				},
+				"longitude": {
+					"type": "number"
+				},
+				"population": {
+					"type": "string"
+				},
+				"state": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}

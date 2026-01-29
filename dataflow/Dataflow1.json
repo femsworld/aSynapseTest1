@@ -1,0 +1,79 @@
+{
+	"name": "Dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Sales",
+						"type": "DatasetReference"
+					},
+					"name": "Sales"
+				},
+				{
+					"dataset": {
+						"referenceName": "Json1",
+						"type": "DatasetReference"
+					},
+					"name": "Stores"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "StoreSales",
+						"type": "DatasetReference"
+					},
+					"name": "SynapseAnalytics"
+				}
+			],
+			"transformations": [
+				{
+					"name": "StoreSales"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          StoreCode as string,",
+				"          Date as date,",
+				"          TotalSales as long,",
+				"          TotalAmount as long",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> Sales",
+				"source(output(",
+				"          city as string,",
+				"          code as string,",
+				"          size as string,",
+				"          latitude as double,",
+				"          longitude as double,",
+				"          population as string,",
+				"          state as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'documentPerLine') ~> Stores",
+				"Sales, Stores join(StoreCode == code,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> StoreSales",
+				"StoreSales sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> SynapseAnalytics"
+			]
+		}
+	}
+}
