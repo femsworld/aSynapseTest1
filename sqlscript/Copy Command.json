@@ -1,0 +1,17 @@
+{
+	"name": "Copy Command",
+	"properties": {
+		"content": {
+			"query": "COPY INTO DailySalesCopyCommand\n(StoreCode default 'XXXXX' 1, Date 2, TotalSales 3, TotalAmount 4)\nFROM 'https://myworkspacetestfiles.blob.core.windows.net/sales/dailysales/*.csv'\nWITH (\n    FILE_TYPE = 'CSV',\n    CREDENTIAL = (IDENTITY='Shared Access Signature', SECRET='sp=rl&st=2026-01-29T10:46:34Z&se=2026-01-30T19:01:34Z&spr=https&sv=2024-11-04&sr=c&sig=xGSPjk6IAvdotn6APEt8ha6mMWFX2hBIbxASLrpRcJ4%3D'),\n    ENCODING = 'UTF8',\n    FIELDTERMINATOR = ',',\n    FIRSTROW=2\n)\n\nSELECT COUNT(*) FROM DailySalesCopyCommand",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "saledatawarehouse",
+				"poolName": "saledatawarehouse"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

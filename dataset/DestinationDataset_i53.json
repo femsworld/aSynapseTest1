@@ -1,0 +1,38 @@
+{
+	"name": "DestinationDataset_i53",
+	"properties": {
+		"annotations": [],
+		"type": "SqlPoolTable",
+		"schema": [
+			{
+				"name": "StoreCode",
+				"type": "varchar"
+			},
+			{
+				"name": "Date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "TotalSales",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "TotalAmount",
+				"type": "bigint",
+				"precision": 19
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "DailySales"
+		},
+		"sqlPool": {
+			"referenceName": "saledatawarehouse",
+			"type": "SqlPoolReference"
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

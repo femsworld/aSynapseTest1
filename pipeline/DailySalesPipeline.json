@@ -1,0 +1,117 @@
+{
+	"name": "DailySalesPipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy_i53",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "sales/dailysales/"
+					},
+					{
+						"name": "Destination",
+						"value": "dbo.DailySales"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"wildcardFileName": "*",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings",
+							"skipLineCount": 0
+						}
+					},
+					"sink": {
+						"type": "SqlPoolSink",
+						"allowCopyCommand": true
+					},
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "olufemiworkspace-WorkspaceDefaultStorage",
+							"type": "LinkedServiceReference"
+						},
+						"path": "sales",
+						"enableCompression": true
+					},
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "StoreCode",
+									"type": "String"
+								},
+								"sink": {
+									"name": "StoreCode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Date",
+									"type": "Date"
+								},
+								"sink": {
+									"name": "Date",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "TotalSales",
+									"type": "String"
+								},
+								"sink": {
+									"name": "TotalSales",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"name": "TotalAmount",
+									"type": "String"
+								},
+								"sink": {
+									"name": "TotalAmount",
+									"type": "Int64"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_i53",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_i53",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2026-01-29T10:46:54Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}
