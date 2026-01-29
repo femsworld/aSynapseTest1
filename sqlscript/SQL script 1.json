@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 1",
+	"properties": {
+		"content": {
+			"query": "CREATE MASTER KEY ENCRYPTION BY PASSWORD='MyVeryStrongPassword$$##';\n\nCREATE DATABASE SCOPED CREDENTIAL SalesDataCredentials\n      WITH IDENTITY = 'user', Secret = '[AccountKey]';\n\nCREATE EXTERNAL DATA SOURCE SalesDataSource with (  \n      TYPE = HADOOP,\n      LOCATION ='wasbs://sales@myworkspacetestfiles.blob.core.windows.net',  \n      CREDENTIAL = SalesDataCredentials \n); \n\nCREATE EXTERNAL FILE FORMAT CSVFileFormat \nWITH\n(\n    FORMAT_TYPE = DelimitedText,\n    FORMAT_OPTIONS \n    (\n       FIELD_TERMINATOR = ',', STRING_DELIMITER = '\"', FIRST_ROW = 2\n    )\n);\n\n\tCREATE EXTERNAL TABLE [dbo].[DailySales_External] \n(\n    StoreCode VARCHAR(100) NOT NULL,\n    Date DATETIME NOT NULL,\n    TotalSales BIGINT NOT NULL,\n    TotalAmount BIGINT NOT NULL\n)\nWITH \n(\n    LOCATION='dailysales',\n    DATA_SOURCE = SalesDataSource ,\n    FILE_FORMAT = CSVFileFormat ,\n    REJECT_TYPE = value,\n    REJECT_VALUE = 0\n);\n\nSELECT TOP 10 * FROM [dbo].[DailySales_External]\n\nCREATE TABLE [dbo].[DailySalesPolyBase]\nWITH (\n    DISTRIBUTION=HASH(StoreCode)\n)\nAS\nSELECT * FROM [dbo].[DailySales_External]\n\nSELECT * FROM [dbo].[DailySalesPolyBase]\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "saledatawarehouse",
+				"poolName": "saledatawarehouse"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
