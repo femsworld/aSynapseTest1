@@ -498,8 +498,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/dataflows/MergeStoresSales')]",
-				"[concat(variables('workspaceId'), '/linkedServices/MergeStaging')]",
-				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+				"[concat(variables('workspaceId'), '/linkedServices/MergeStaging')]"
 			]
 		},
 		{
