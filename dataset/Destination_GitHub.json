@@ -1,0 +1,24 @@
+{
+	"name": "Destination_GitHub",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorageDiabetes",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "diabetes.csv",
+				"container": "olufemicontainer1"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

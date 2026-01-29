@@ -1,0 +1,9 @@
+{
+	"name": "OlufemekDataFactory1",
+	"location": "norwayeast",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "68cada88-34f3-49c2-98ba-5cd95a76a63e",
+		"tenantId": "03c967ac-a1d4-4752-a06d-7249f6761022"
+	}
+}

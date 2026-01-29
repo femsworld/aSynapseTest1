@@ -1,0 +1,28 @@
+{
+	"name": "TWTest2",
+	"properties": {
+		"description": "Test tw",
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipeline": {
+			"pipelineReference": {
+				"referenceName": "DiabetesPipeline_DiabetesTW_copy1",
+				"type": "PipelineReference"
+			}
+		},
+		"type": "TumblingWindowTrigger",
+		"typeProperties": {
+			"frequency": "Hour",
+			"interval": 6,
+			"startTime": "2026-01-26T18:22:00Z",
+			"endTime": "2026-01-30T18:22:00Z",
+			"delay": "00:00:00",
+			"maxConcurrency": 50,
+			"retryPolicy": {
+				"count": 3,
+				"intervalInSeconds": 300
+			},
+			"dependsOn": []
+		}
+	}
+}

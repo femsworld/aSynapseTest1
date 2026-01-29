@@ -1,0 +1,16 @@
+{
+	"name": "TrippingDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "TrippingOData1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "ODataResource",
+		"schema": [],
+		"typeProperties": {
+			"path": "Airports"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

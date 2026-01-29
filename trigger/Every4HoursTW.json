@@ -1,0 +1,28 @@
+{
+	"name": "Every4HoursTW",
+	"properties": {
+		"description": "Run every 4 hours",
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipeline": {
+			"pipelineReference": {
+				"referenceName": "DiabetesPipeline_DiabetesTW",
+				"type": "PipelineReference"
+			}
+		},
+		"type": "TumblingWindowTrigger",
+		"typeProperties": {
+			"frequency": "Hour",
+			"interval": 12,
+			"startTime": "2026-01-28T17:25:00Z",
+			"endTime": "2026-02-01T17:25:00Z",
+			"delay": "00:00:00",
+			"maxConcurrency": 50,
+			"retryPolicy": {
+				"count": 3,
+				"intervalInSeconds": 300
+			},
+			"dependsOn": []
+		}
+	}
+}
